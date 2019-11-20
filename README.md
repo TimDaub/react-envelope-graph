@@ -30,7 +30,6 @@ and then use it:
 
 ```js
 function App() {
-
 	const width = 100;
 
   return (
@@ -44,7 +43,7 @@ function App() {
     />
   );
 }
-```;
+```
 
 ## Contributing and Demo
 
