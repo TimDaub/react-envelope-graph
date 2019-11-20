@@ -30,16 +30,16 @@ and then use it:
 
 ```js
 function App() {
-	const width = 100;
+  const width = 100;
 
   return (
     <EnvelopeGraph
-			height={20}
-			width={100}
-			a={0}
-			d={5}
-			s={1}
-			r={(1/4) * width}
+      height={20}
+      width={100}
+      a={0}
+      d={5}
+      s={1}
+      r={(1/4) * width}
     />
   );
 }
