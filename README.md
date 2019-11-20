@@ -4,7 +4,7 @@
 > attack, decay, sustain and release.
 
 <a href="https://github.com/TimDaub/react-envelope-graph"><img width="600"
-src="/demo/react-envelope-graph.gif" alt="react-envelope-graph screenshot" /></a>
+src="https://github.com/TimDaub/react-envelope-graph/raw/master/assets/react-envelope-graph.gif" alt="react-envelope-graph screenshot" /></a>
 
 ## Installing
 
@@ -30,21 +30,20 @@ and then use it:
 
 ```js
 function App() {
-
-	const width = 100;
+  const width = 100;
 
   return (
     <EnvelopeGraph
-			height={20}
-			width={100}
-			a={0}
-			d={5}
-			s={1}
-			r={(1/4) * width}
+      height={20}
+      width={100}
+      a={0}
+      d={5}
+      s={1}
+      r={(1/4) * width}
     />
   );
 }
-```;
+```
 
 ## Contributing and Demo
 
