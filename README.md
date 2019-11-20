@@ -4,7 +4,7 @@
 > attack, decay, sustain and release.
 
 <a href="https://github.com/TimDaub/react-envelope-graph"><img width="600"
-src="/demo/react-envelope-graph.gif" alt="react-envelope-graph screenshot" /></a>
+src="https://github.com/TimDaub/react-envelope-graph/raw/master/assets/react-envelope-graph.gif" alt="react-envelope-graph screenshot" /></a>
 
 ## Installing
 
