@@ -40,6 +40,9 @@ function App() {
       d={5}
       s={1}
       r={(1/4) * width}
+      onAttackChange={a => console.log("New attack:", a)}
+      {/* ... */}
+      onReleaseChange={r => console.log("New release:", a)}
     />
   );
 }
@@ -65,6 +68,7 @@ is a list of the current limitations:
 - [ ] The component's size can only be adjusted relatively to other content but
 not absolutely .e.g via `px`
 - [ ] Touch listeners are not yet implemented
+- [ ] Rename `s` to `sx`
 
 ## License
 

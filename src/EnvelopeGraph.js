@@ -203,6 +203,27 @@ class EnvelopeGraph extends React.Component {
     );
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    this.notifyChanges(prevState);
+  }
+
+  notifyChanges(prevState) {
+    const { a, d, s, r } = this.state;
+    const { onAttackChange, onDecayChange, onSustainChange, onReleaseChange } = this.props;
+    if (prevState.a !== a && onAttackChange) {
+      onAttackChange(a);
+    }
+    if (prevState.d !== d && onDecayChange) {
+      onDecayChange(d);
+    }
+    if (prevState.s !== s && onSustainChange) {
+      onSustainChange(s);
+    }
+    if (prevState.r !== r && onReleaseChange) {
+      onReleaseChange(r);
+    }
+  }
+
   moveDnDRect(type) {
     return event => {
       event.stopPropagation();
@@ -285,6 +306,11 @@ EnvelopeGraph.propTypes = {
   d: PropTypes.number.isRequired,
   s: PropTypes.number.isRequired,
   r: PropTypes.number.isRequired,
+
+  onAttackChange: PropTypes.func,
+  onDecayChange: PropTypes.func,
+  onSustainChange: PropTypes.func,
+  onReleaseChange: PropTypes.func,
 
   style: PropTypes.object,
   lineStyle: PropTypes.object,
