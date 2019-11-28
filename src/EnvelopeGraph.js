@@ -36,16 +36,35 @@ class EnvelopeGraph extends React.Component {
 
       drag: null
     };
+
+    if (
+      props.ratio &&
+      typeof props.ratio.xa === "number" &&
+      typeof props.ratio.xd === "number" &&
+      typeof props.ratio.xs === "number" &&
+      typeof props.ratio.xr === "number"
+    ) {
+      this.state.ratio = props.ratio;
+    } else if (!props.ratio) {
+      this.state.ratio = {
+        xa: 0.25,
+        xd: 0.25,
+        xs: 0.25,
+        xr: 0.25,
+      };
+    } else {
+      throw new Error("ratio needs to have values of type 'number': xa, xd, xs, xr");
+    }
   }
   /**
    * Returns the width of each phase
    */
   getPhaseLengths() {
-    const { xa, xd, xr } = this.state;
+    const { xa, xd, xr, ratio } = this.state;
     const { width } = this.props;
 
     // NOTE: We're subtracting 1/4 of the width to reserve space for release.
-    const absoluteS = width - xa - xd - (1 / 4) * width;
+    const absoluteS = width - xa - xd - ratio.xs * width;
 
     return [xa, xd, absoluteS, xr];
   }
@@ -198,8 +217,9 @@ class EnvelopeGraph extends React.Component {
   }
 
   notifyChanges(prevState) {
-    const { xa, ya, xd, ys, xr } = this.state;
+    const { xa, ya, xd, ys, xr, ratio } = this.state;
     const {
+      width,
       onAttackChange,
       onDecayChange,
       onSustainChange,
@@ -209,16 +229,19 @@ class EnvelopeGraph extends React.Component {
     // NOTE: Currently ya cannot be changed, so we're not checking it's
     // condition here.
     if (prevState.xa !== xa && onAttackChange) {
-      onAttackChange({ xa, ya });
+      const relationXa = xa / width * 1 / ratio.xa;
+      onAttackChange({ xa: relationXa, ya });
     }
     if (prevState.xd !== xd && onDecayChange) {
-      onDecayChange(xd);
+      const relationXd = xd / width * 1 / ratio.xd;
+      onDecayChange(relationXd);
     }
     if (prevState.ys !== ys && onSustainChange) {
       onSustainChange(ys);
     }
     if (prevState.xr !== xr && onReleaseChange) {
-      onReleaseChange(xr);
+      const relationXr = xr / width * 1 / ratio.xr;
+      onReleaseChange(relationXr);
     }
   }
 
@@ -240,7 +263,7 @@ class EnvelopeGraph extends React.Component {
         marginBottom,
         marginLeft
       } = this.props;
-      const { drag, xa, xd, xr } = this.state;
+      const { drag, xa, xd, xr, ratio} = this.state;
 
       if (drag === type) {
         const rect = event.target.getBoundingClientRect();
@@ -248,7 +271,7 @@ class EnvelopeGraph extends React.Component {
         if (type === "attack") {
           const xaNew = (event.clientX - rect.left + marginLeft) / emToPx;
           let newState = {};
-          if (xaNew <= (1 / 4) * width) {
+          if (xaNew <= ratio.xa * width) {
             newState.xa = xaNew;
           }
 
@@ -270,7 +293,7 @@ class EnvelopeGraph extends React.Component {
             (event.clientX - rect.left + marginLeft - attackWidth * emToPx) /
             emToPx;
 
-          if (xdNew >= 0 && xdNew <= (1 / 4) * width) {
+          if (xdNew >= 0 && xdNew <= ratio.xd * width) {
             newState.xd = xdNew;
           }
 
@@ -282,7 +305,7 @@ class EnvelopeGraph extends React.Component {
               marginLeft -
               (attackWidth + decayWidth + sustainWidth) * emToPx) /
             emToPx;
-          if (xrNew >= 0 && xrNew <= (1 / 4) * width) {
+          if (xrNew >= 0 && xrNew <= ratio.xr * width) {
             this.setState({ xr: xrNew });
           }
         }
@@ -306,6 +329,13 @@ EnvelopeGraph.propTypes = {
 
   defaultYa: PropTypes.number.isRequired,
   defaultYs: PropTypes.number.isRequired,
+
+  ratio: PropTypes.shape({
+    xa: PropTypes.number,
+    xd: PropTypes.number,
+    xs: PropTypes.number,
+    xr: PropTypes.number
+  }),
 
   onAttackChange: PropTypes.func,
   onDecayChange: PropTypes.func,

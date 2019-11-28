@@ -23,6 +23,12 @@
               defaultXd={5}
               defaultYs={0.5}
               defaultXr={(1/4) * width}
+              ratio={{
+                xa: 0.1,
+                xd: 0.2,
+                xs: 0.5,
+                xr: 0.2
+              }}
               onAttackChange={({ xa, ya }) => console.log(`xa: ${xa}, ya: ${ya}`)}
               onDecayChange={xd => console.log("Decay change", xd)}
               onSustainChange={ys => console.log("Sustain change", ys)}

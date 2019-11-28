@@ -70,6 +70,9 @@ Ideally they come in a seconds format or something similar.
 - [ ] The component's size can only be adjusted relatively to other content but
 not absolutely .e.g via `px`
 - [ ] Touch listeners are not yet implemented
+- [ ] `xr` can only be resized on large view ports
+- [ ] Because of emToPx, values become unreliable for other view ports
+than my macbook :/
 
 ## License
 
