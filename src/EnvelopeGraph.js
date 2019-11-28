@@ -38,12 +38,14 @@ class EnvelopeGraph extends React.Component {
     super(props);
 
     this.state = {
-      a: props.a,
-      // NOTE: Dragging a in x direction is currently not implemented.
-      ax: props.ax,
-      d: props.d,
-      s: props.s,
-      r: props.r,
+      xa: props.xa,
+      xd: props.xd,
+      xr: props.xr,
+
+      // NOTE: Dragging attack in y direction is currently not implemented.
+      ya: props.ya,
+      ys: props.ys,
+
       drag: null
     };
   }
@@ -51,13 +53,13 @@ class EnvelopeGraph extends React.Component {
    * Returns the width of each phase
    */
   getPhaseLengths() {
-    const { a, d, r } = this.state;
+    const { xa, xd, xr } = this.state;
     const { width } = this.props;
 
     // NOTE: We're subtracting 1/4 of the width to reserve space for release.
-    const absoluteS = width - a - d - (1 / 4) * width;
+    const absoluteS = width - xa - xd - (1 / 4) * width;
 
-    return [a, d, absoluteS, r];
+    return [xa, xd, absoluteS, xr];
   }
 
   /**
@@ -66,7 +68,7 @@ class EnvelopeGraph extends React.Component {
    * @return {String}
    */
   generatePath() {
-    const { s, ax } = this.state;
+    const { ys, ya } = this.state;
     const { height } = this.props;
     const [
       attackWidth,
@@ -78,9 +80,9 @@ class EnvelopeGraph extends React.Component {
     let strokes = [];
     strokes.push("M 0 " + height);
     strokes.push(this.exponentialStrokeTo(attackWidth, -height));
-    strokes.push(this.exponentialStrokeTo(decayWidth, height * (1 - s)));
+    strokes.push(this.exponentialStrokeTo(decayWidth, height * (1 - ys)));
     strokes.push(this.linearStrokeTo(sustainWidth, 0));
-    strokes.push(this.exponentialStrokeTo(releaseWidth, height * s));
+    strokes.push(this.exponentialStrokeTo(releaseWidth, height * ys));
 
     return strokes.join(" ");
   }
@@ -160,7 +162,7 @@ class EnvelopeGraph extends React.Component {
       marginBottom,
       marginLeft
     } = this.props;
-    const { s, drag } = this.state;
+    const { ys, drag } = this.state;
 
     const rHeight = 0.75;
     const rWidth = 0.75;
@@ -171,7 +173,7 @@ class EnvelopeGraph extends React.Component {
       y = marginTop - rHeight / 2;
     } else if (type === "decaysustain") {
       x = marginLeft + attackWidth + decayWidth - rWidth / 2;
-      y = marginTop + height * (1 - s) - rHeight / 2;
+      y = marginTop + height * (1 - ys) - rHeight / 2;
     } else if (type === "release") {
       x =
         marginLeft +
@@ -208,19 +210,24 @@ class EnvelopeGraph extends React.Component {
   }
 
   notifyChanges(prevState) {
-    const { a, d, s, r } = this.state;
-    const { onAttackChange, onDecayChange, onSustainChange, onReleaseChange } = this.props;
-    if (prevState.a !== a && onAttackChange) {
-      onAttackChange(a);
+    const { xa, xd, ys, xr } = this.state;
+    const {
+      onAttackChange,
+      onDecayChange,
+      onSustainChange,
+      onReleaseChange
+    } = this.props;
+    if (prevState.xa !== xa && onAttackChange) {
+      onAttackChange(xa);
     }
-    if (prevState.d !== d && onDecayChange) {
-      onDecayChange(d);
+    if (prevState.xd !== xd && onDecayChange) {
+      onDecayChange(xd);
     }
-    if (prevState.s !== s && onSustainChange) {
-      onSustainChange(s);
+    if (prevState.ys !== ys && onSustainChange) {
+      onSustainChange(ys);
     }
-    if (prevState.r !== r && onReleaseChange) {
-      onReleaseChange(r);
+    if (prevState.xr !== xr && onReleaseChange) {
+      onReleaseChange(xr);
     }
   }
 
@@ -232,7 +239,7 @@ class EnvelopeGraph extends React.Component {
         attackWidth,
         decayWidth,
         sustainWidth,
-        releaseWidth,
+        releaseWidth
       ] = this.getPhaseLengths();
       const {
         height,
@@ -242,49 +249,49 @@ class EnvelopeGraph extends React.Component {
         marginBottom,
         marginLeft
       } = this.props;
-      const { drag, a, d, r } = this.state;
+      const { drag, xa, xd, xr } = this.state;
 
       if (drag === type) {
         const rect = event.target.getBoundingClientRect();
 
         if (type === "attack") {
-          const aNew = (event.clientX - rect.left + marginLeft) / emToPx;
+          const xaNew = (event.clientX - rect.left + marginLeft) / emToPx;
           let newState = {};
-          if (aNew <= (1 / 4) * width) {
-            newState.a = aNew;
+          if (xaNew <= (1 / 4) * width) {
+            newState.xa = xaNew;
           }
 
-          const axNew = 1 - (event.clientY - rect.top) / height / emToPx;
-          if (axNew >= 0 && axNew <= 1) {
-            newState.ax = axNew;
+          const yaNew = 1 - (event.clientY - rect.top) / height / emToPx;
+          if (yaNew >= 0 && yaNew <= 1) {
+            newState.ya = yaNew;
           }
 
           this.setState(newState);
         } else if (type === "decaysustain") {
-          const sNew = 1 - (event.clientY - rect.top) / height / emToPx;
+          const ysNew = 1 - (event.clientY - rect.top) / height / emToPx;
 
           let newState = {};
-          if (sNew >= 0 && sNew <= 1) {
-            newState.s = sNew;
+          if (ysNew >= 0 && ysNew <= 1) {
+            newState.ys = ysNew;
           }
-          const dNew =
+          const xdNew =
             (event.clientX - rect.left + marginLeft - attackWidth * emToPx) /
             emToPx;
 
-          if (dNew >= 0 && dNew <= (1 / 4) * width) {
-            newState.d = dNew;
+          if (xdNew >= 0 && xdNew <= (1 / 4) * width) {
+            newState.xd = xdNew;
           }
 
           this.setState(newState);
         } else if (type == "release") {
-          const rNew =
+          const xrNew =
             (event.clientX -
               rect.left +
               marginLeft -
               (attackWidth + decayWidth + sustainWidth) * emToPx) /
             emToPx;
-          if (rNew >= 0 && rNew <= (1 / 4) * width) {
-            this.setState({ r: rNew });
+          if (xrNew >= 0 && xrNew <= (1 / 4) * width) {
+            this.setState({ xr: xrNew });
           }
         }
       }
@@ -301,11 +308,12 @@ EnvelopeGraph.propTypes = {
   marginBottom: PropTypes.number,
   marginLeft: PropTypes.number,
 
-  a: PropTypes.number.isRequired,
-  ax: PropTypes.number.isRequired,
-  d: PropTypes.number.isRequired,
-  s: PropTypes.number.isRequired,
-  r: PropTypes.number.isRequired,
+  xa: PropTypes.number.isRequired,
+  xd: PropTypes.number.isRequired,
+  xr: PropTypes.number.isRequired,
+
+  ya: PropTypes.number.isRequired,
+  ys: PropTypes.number.isRequired,
 
   onAttackChange: PropTypes.func,
   onDecayChange: PropTypes.func,

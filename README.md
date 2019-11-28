@@ -36,13 +36,13 @@ function App() {
     <EnvelopeGraph
       height={20}
       width={100}
-      a={0}
-      d={5}
-      s={1}
-      r={(1/4) * width}
-      onAttackChange={a => console.log("New attack:", a)}
+      xa={0}
+      xd={5}
+      ys={1}
+      xr={(1/4) * width}
+      onAttackChange={xa => console.log("New attack:", xa)}
       {/* ... */}
-      onReleaseChange={r => console.log("New release:", a)}
+      onReleaseChange={xr => console.log("New release:", xr)}
     />
   );
 }
@@ -63,12 +63,12 @@ $ npm run dev
 Help is very much appreciated. I'll try to handle PRs as fast as I can. Below
 is a list of the current limitations:
 
-- [ ] It's difficult to get the adjusted ADSR values from a parent component
-- [ ] The `ax` cannot be set via dragging
+- [ ] It's difficult to get the adjusted ADSR values from a parent component.
+Ideally they come in a seconds format or something similar.
+- [ ] The `ya` value cannot be set via dragging
 - [ ] The component's size can only be adjusted relatively to other content but
 not absolutely .e.g via `px`
 - [ ] Touch listeners are not yet implemented
-- [ ] Rename `s` to `sx`
 
 ## License
 

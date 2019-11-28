@@ -13,14 +13,20 @@
         <script src="react-envelope-graph.umd.js"></script>
         <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
         <script type="text/babel">
+          var width = 100;
+
           var graph = (
             <ReactEnvelopeGraph
-              width={100}
+              width={width}
               height={20}
-              a={1}
-              d={5}
-              s={0.5}
-              r={5}
+              xa={1}
+              xd={5}
+              ys={0.5}
+              xr={(1/4) * width}
+              onAttackChange={xa => console.log("Attack change", xa)}
+              onDecayChange={xd => console.log("Decay change", xd)}
+              onSustainChange={ys => console.log("Sustain change", ys)}
+              onReleaseChange={xr => console.log("Release change", xr)}
             />
           )
           ReactDOM.render(graph, document.querySelector("#root"));
