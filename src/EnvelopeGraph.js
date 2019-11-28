@@ -11,18 +11,6 @@ const styles = {
     stroke: "rgb(221, 226, 232)",
     strokeWidth: "2"
   },
-  timeline: {
-    fill: "none",
-    stroke: "#354550",
-    strokeWidth: "1"
-  },
-  phaseline: {
-    fill: "none",
-    stroke: "rgb(70, 94, 111)",
-    strokeWidth: "1",
-    stroke: "rgb(221, 226, 232)",
-    strokeDasharray: "5,5"
-  },
   background: {
     fill: "rgb(40, 56, 68)"
   }
@@ -321,9 +309,7 @@ EnvelopeGraph.propTypes = {
   onReleaseChange: PropTypes.func,
 
   style: PropTypes.object,
-  lineStyle: PropTypes.object,
-  timeLineStyle: PropTypes.object,
-  phaseLineStyle: PropTypes.object
+  lineStyle: PropTypes.object
 };
 
 EnvelopeGraph.defaultProps = {
