@@ -30,24 +30,39 @@ and then use it:
 
 ```js
 function App() {
-  const width = 100;
-
   return (
     <EnvelopeGraph
-      height={20}
-      width={100}
+      width="100%"
+      height="20%"
       defaultXa={1}
-      defaultXd={5}
+      defaultXd={0.5}
       defaultYs={0.5}
-      defaultXr={(1/4) * width}
+      defaultXr={0.7}
+      ratio={{
+        xa: 0.25,
+        xd: 0.25,
+        xs: 0.5,
+        xr: 0.2
+      }}
       onAttackChange={({ xa, ya }) => console.log(`xa: ${xa}, ya: ${ya}`)}
-      onDecayChange={xd => console.log("xd", xd)}
-      onSustainChange={ys => console.log("ys", ys)}
-      onReleaseChange={xr => console.log("xr", xr)}
+      onDecayChange={xd => console.log("xd:", xd)}
+      onSustainChange={ys => console.log("ys:", ys)}
+      onReleaseChange={xr => console.log("xr:", xr)}
     />
   );
 }
 ```
+
+### Notes
+
+- Width/height ratio is preserved
+- `width` and `height` can be specified in `px` and `%`. I'm currently unsure
+why e.g. `vh` doesn't work...
+- `defaultXa`, `defaultXd`, `defaultYs` and `defaultXr` need to have a value
+between 0 and 1
+- In `ratio` the sum of all values needs to be `<= 1`
+- `onAttackChange` returns an object containing `xa` and `ya`. All other
+listener hooks only return a single float.
 
 ## Contributing and Demo
 
@@ -64,15 +79,8 @@ $ npm run dev
 Help is very much appreciated. I'll try to handle PRs as fast as I can. Below
 is a list of the current limitations:
 
-- [ ] It's difficult to get the adjusted ADSR values from a parent component.
-Ideally they come in a seconds format or something similar.
 - [ ] The `ya` value cannot be set via dragging
-- [ ] The component's size can only be adjusted relatively to other content but
-not absolutely .e.g via `px`
 - [ ] Touch listeners are not yet implemented
-- [ ] `xr` can only be resized on large view ports
-- [ ] Because of emToPx, values become unreliable for other view ports
-than my macbook :/
 
 ## License
 
