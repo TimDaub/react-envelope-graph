@@ -26,13 +26,13 @@ class EnvelopeGraph extends React.Component {
     super(props);
 
     this.state = {
-      xa: props.xa,
-      xd: props.xd,
-      xr: props.xr,
+      xa: props.defaultXa,
+      xd: props.defaultXd,
+      xr: props.defaultXr,
 
       // NOTE: Dragging attack in y direction is currently not implemented.
-      ya: props.ya,
-      ys: props.ys,
+      ya: props.defaultYa,
+      ys: props.defaultYs,
 
       drag: null
     };
@@ -198,15 +198,18 @@ class EnvelopeGraph extends React.Component {
   }
 
   notifyChanges(prevState) {
-    const { xa, xd, ys, xr } = this.state;
+    const { xa, ya, xd, ys, xr } = this.state;
     const {
       onAttackChange,
       onDecayChange,
       onSustainChange,
       onReleaseChange
     } = this.props;
+
+    // NOTE: Currently ya cannot be changed, so we're not checking it's
+    // condition here.
     if (prevState.xa !== xa && onAttackChange) {
-      onAttackChange(xa);
+      onAttackChange({ xa, ya });
     }
     if (prevState.xd !== xd && onDecayChange) {
       onDecayChange(xd);
@@ -251,7 +254,8 @@ class EnvelopeGraph extends React.Component {
 
           const yaNew = 1 - (event.clientY - rect.top) / height / emToPx;
           if (yaNew >= 0 && yaNew <= 1) {
-            newState.ya = yaNew;
+            // TODO: Readd ya and make sure graph is displayed correctly.
+            //newState.ya = yaNew;
           }
 
           this.setState(newState);
@@ -296,12 +300,12 @@ EnvelopeGraph.propTypes = {
   marginBottom: PropTypes.number,
   marginLeft: PropTypes.number,
 
-  xa: PropTypes.number.isRequired,
-  xd: PropTypes.number.isRequired,
-  xr: PropTypes.number.isRequired,
+  defaultXa: PropTypes.number.isRequired,
+  defaultXd: PropTypes.number.isRequired,
+  defaultXr: PropTypes.number.isRequired,
 
-  ya: PropTypes.number.isRequired,
-  ys: PropTypes.number.isRequired,
+  defaultYa: PropTypes.number.isRequired,
+  defaultYs: PropTypes.number.isRequired,
 
   onAttackChange: PropTypes.func,
   onDecayChange: PropTypes.func,
@@ -316,7 +320,9 @@ EnvelopeGraph.defaultProps = {
   marginTop: 1,
   marginRight: 1,
   marginBottom: 1,
-  marginLeft: 1
+  marginLeft: 1,
+  // TODO: Remove when ya implemented.
+  defaultYa: 1
 };
 
 export default EnvelopeGraph;

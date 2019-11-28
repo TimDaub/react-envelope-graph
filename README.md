@@ -36,13 +36,14 @@ function App() {
     <EnvelopeGraph
       height={20}
       width={100}
-      xa={0}
-      xd={5}
-      ys={1}
-      xr={(1/4) * width}
-      onAttackChange={xa => console.log("New attack:", xa)}
-      {/* ... */}
-      onReleaseChange={xr => console.log("New release:", xr)}
+      defaultXa={1}
+      defaultXd={5}
+      defaultYs={0.5}
+      defaultXr={(1/4) * width}
+      onAttackChange={({ xa, ya }) => console.log(`xa: ${xa}, ya: ${ya}`)}
+      onDecayChange={xd => console.log("xd", xd)}
+      onSustainChange={ys => console.log("ys", ys)}
+      onReleaseChange={xr => console.log("xr", xr)}
     />
   );
 }
