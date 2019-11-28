@@ -6,6 +6,8 @@
 <a href="https://github.com/TimDaub/react-envelope-graph"><img width="600"
 src="https://github.com/TimDaub/react-envelope-graph/raw/master/assets/react-envelope-graph.gif" alt="react-envelope-graph screenshot" /></a>
 
+Check out the [Demo](https://codesandbox.io/s/nervous-northcutt-ikjhb?fontsize=14&hidenavigation=1&theme=dark)!
+
 ## Installing
 
 ```bash
@@ -64,7 +66,7 @@ between 0 and 1
 - `onAttackChange` returns an object containing `xa` and `ya`. All other
 listener hooks only return a single float.
 
-## Contributing and Demo
+## Contributing
 
 To try the component:
 
