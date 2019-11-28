@@ -1,7 +1,7 @@
 # react-envelope-graph
 
-> A drag-and-drop-enabled envelope graph that allows to shape a wave with
-> attack, decay, sustain and release.
+> A drag-and-drop-enabled, responsive, envelope graph that allows to shape a
+> wave with attack, decay, sustain and release.
 
 <a href="https://github.com/TimDaub/react-envelope-graph"><img width="600"
 src="https://github.com/TimDaub/react-envelope-graph/raw/master/assets/react-envelope-graph.gif" alt="react-envelope-graph screenshot" /></a>
@@ -81,6 +81,18 @@ is a list of the current limitations:
 
 - [ ] The `ya` value cannot be set via dragging
 - [ ] Touch listeners are not yet implemented
+
+## Changelog
+
+### 0.0.2
+
+- Event subscriptions
+- Improved props API
+- Responsive
+
+### 0.0.1
+
+- Drop and draggable ADSR graph
 
 ## License
 

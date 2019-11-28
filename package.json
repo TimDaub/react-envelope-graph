@@ -1,7 +1,7 @@
 {
   "name": "react-envelope-graph",
-  "version": "0.0.1",
-  "description": "A react UI component to shape an envelope based on attack, decay, sustain and release",
+  "version": "0.0.2",
+  "description": "A drag-and-drop-enabled, responsive, envelope graph that allows to shape a wave with attack, decay, sustain and release",
   "main": "dist/react-envelope-graph.cjs.js",
   "unpkg": "dist/react-envelope-graph.umd.js",
   "scripts": {
@@ -24,6 +24,7 @@
     "release",
     "decay",
     "envelope",
+    "responsive",
     "synthesizer",
     "drag",
     "and",
