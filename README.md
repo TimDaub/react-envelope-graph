@@ -113,6 +113,11 @@ is a list of the current limitations:
 
 ## Changelog
 
+### 0.0.5
+
+- Improve support for `styles` prop to allow to styling of the component
+- Move `dndBox` prop to `styles`
+
 ### 0.0.4
 
 - DnD box's size now configurable
