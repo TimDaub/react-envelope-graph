@@ -197,8 +197,8 @@ class EnvelopeGraph extends React.Component {
         fill="none"
         stroke={stroke}
         strokeWidth={strokeWidth}
-        d={`M ${strokeWidth},${strokeWidth +
-          length} V ${strokeWidth} H ${strokeWidth + length}`}
+        d={`M ${strokeWidth},${2 * strokeWidth +
+          length} V ${strokeWidth} H ${2 * strokeWidth + length}`}
       />,
       <path
         key="top-right-corner"
