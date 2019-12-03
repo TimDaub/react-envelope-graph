@@ -168,6 +168,21 @@ class EnvelopeGraph extends React.Component {
     return `l ${dx} ${dy}`;
   }
 
+  renderCorners() {
+    const { marginTop, marginRight, marginBottom, marginLeft } = this.props;
+    const length = 2;
+    const strokeWidth = 0.25;
+    const stroke = "white"
+
+    // NOTE: We draw the paths clockwise.
+    return [
+      <path key="top-left-corner" fill="none" stroke={stroke} strokeWidth={strokeWidth} d={`M ${marginLeft},${marginTop+length} V ${marginTop} H ${marginLeft+length}`} />,
+      <path key="top-right-corner" fill="none" stroke={stroke} strokeWidth={strokeWidth} d={`M ${viewBox.width+marginLeft-length},${marginTop} H ${viewBox.width+marginLeft} V ${marginTop+length}`} />,
+      <path key="bottom-right-corner" fill="none" stroke={stroke} strokeWidth={strokeWidth} d={`M ${viewBox.width+marginLeft},${viewBox.height+marginTop-length} V ${viewBox.height+marginTop} H ${viewBox.width+marginLeft-length}`} />,
+      <path key="bottom-left-corner" fill="none" stroke={stroke} strokeWidth={strokeWidth} d={`M ${marginLeft+length},${viewBox.height+marginTop} H ${marginLeft} V ${viewBox.height+marginTop-length}`} />,
+    ]
+  }
+
   render() {
     const {
       width,
@@ -176,7 +191,8 @@ class EnvelopeGraph extends React.Component {
       marginTop,
       marginRight,
       marginBottom,
-      marginLeft
+      marginLeft,
+      corners
     } = this.props;
     const { drag } = this.state;
 
@@ -206,6 +222,7 @@ class EnvelopeGraph extends React.Component {
           style={Object.assign({}, styles.line)}
           vectorEffect="non-scaling-stroke"
         />
+        {corners ? this.renderCorners() : null}
         {this.renderDnDRect("attack")}
         {this.renderDnDRect("decaysustain")}
         {this.renderDnDRect("release")}
@@ -400,7 +417,8 @@ EnvelopeGraph.propTypes = {
   onSustainChange: PropTypes.func,
   onReleaseChange: PropTypes.func,
 
-  styles: PropTypes.object
+  styles: PropTypes.object,
+  corners: PropTypes.bool
 };
 
 EnvelopeGraph.defaultProps = {
@@ -408,8 +426,9 @@ EnvelopeGraph.defaultProps = {
   marginRight: 1,
   marginBottom: 1,
   marginLeft: 1,
+  corners: true,
   // TODO: Remove when ya implemented.
-  defaultYa: 1
+  defaultYa: 1,
 };
 
 export default EnvelopeGraph;
