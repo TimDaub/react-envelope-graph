@@ -46,9 +46,25 @@ function App() {
         xs: 0.5,
         xr: 0.2
       }}
-      dndBox={{
-        height: 1,
-        width: 1
+      styles={{
+        line: {
+          fill: "none",
+          stroke: "red",
+          strokeWidth: 2,
+        },
+        background: {
+          fill: "black"
+        },
+        dndBox: {
+          fill: "none",
+          stroke: "blue",
+          strokeWidth: 0.1,
+          height: 1,
+          width: 1
+        },
+        dndBoxActive: {
+          fill: "blue",
+        }
       }}
       onAttackChange={({ xa, ya }) => console.log(`xa: ${xa}, ya: ${ya}`)}
       onDecayChange={xd => console.log("xd:", xd)}
@@ -69,6 +85,10 @@ between 0 and 1
 - In `ratio` the sum of all values needs to be `<= 1`
 - `onAttackChange` returns an object containing `xa` and `ya`. All other
 listener hooks only return a single float.
+- Most numeric values in the `styles` prop should not use a unit (e.g. `px` or
+  `em`) as they set values on SVG components
+- Note that `styles` is not a regular `style` prop, but a custom prop that 
+additionally allows to configure interaction reactions too
 - Optional props: `marginTop`, `marginRight`, `marginBottom`, `marginLeft`,
 `ratio`, `dndBox`, `onAttackChange`, `onDecayChange`, `onSustainChange`,
 `onReleaseChange`, `style`

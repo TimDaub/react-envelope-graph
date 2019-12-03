@@ -5,11 +5,23 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-const styles = {
+let styles = {
   line: {
     fill: "none",
     stroke: "rgb(221, 226, 232)",
     strokeWidth: "2"
+  },
+  dndBox: {
+    fill: "none",
+    stroke: "white",
+    strokeWidth: 0.1,
+    height: 0.75,
+    width: 0.75
+  },
+  dndBoxActive: {
+    fill: "none",
+    stroke: "white",
+    strokeWidth: 0.1
   },
   background: {
     fill: "rgb(40, 56, 68)"
@@ -48,23 +60,6 @@ class EnvelopeGraph extends React.Component {
       );
     }
 
-    if (
-      props.dndBox &&
-      typeof props.dndBox.height === "number" &&
-      typeof props.dndBox.width === "number"
-    ) {
-      this.state.dndBox = props.dndBox;
-    } else if (!props.dndBox) {
-      this.state.dndBox = {
-        height: 0.75,
-        width: 0.75
-      };
-    } else {
-      throw new Error(
-        "dndBox needs to have values of type 'number': height, width"
-      );
-    }
-
     this.state = Object.assign(this.state, {
       xa: props.defaultXa * viewBox.width * this.state.ratio.xa,
       xd: props.defaultXd * viewBox.width * this.state.ratio.xd,
@@ -81,6 +76,8 @@ class EnvelopeGraph extends React.Component {
 
     this.onWindowResize = this.onWindowResize.bind(this);
     this.handleGraphExit = this.handleGraphExit.bind(this);
+
+    styles = Object.assign(styles, props.styles);
   }
 
   componentDidMount() {
@@ -206,7 +203,7 @@ class EnvelopeGraph extends React.Component {
         <path
           transform={`translate(${marginLeft}, ${marginTop})`}
           d={this.generatePath()}
-          style={styles.line}
+          style={Object.assign({}, styles.line)}
           vectorEffect="non-scaling-stroke"
         />
         {this.renderDnDRect("attack")}
@@ -230,9 +227,9 @@ class EnvelopeGraph extends React.Component {
       marginBottom,
       marginLeft
     } = this.props;
-    const { ys, drag, dndBox } = this.state;
-    const rHeight = dndBox.height;
-    const rWidth = dndBox.width;
+    const { ys, drag } = this.state;
+    const rHeight = styles.dndBox.height;
+    const rWidth = styles.dndBox.width;
 
     let x, y;
     if (type === "attack") {
@@ -266,9 +263,10 @@ class EnvelopeGraph extends React.Component {
         style={{
           pointerEvents: "all",
           cursor: drag === type ? "none" : "grab",
-          fill: drag === type ? "white" : "none",
-          stroke: drag === type ? "white" : "yellow",
-          strokeWidth: 0.1
+          fill: drag === type ? styles.dndBoxActive.fill : styles.dndBox.fill,
+          stroke:
+            drag === type ? styles.dndBoxActive.stroke : styles.dndBox.stroke,
+          strokeWidth: styles.dndBox.strokeWidth
         }}
       />
     );
@@ -402,7 +400,7 @@ EnvelopeGraph.propTypes = {
   onSustainChange: PropTypes.func,
   onReleaseChange: PropTypes.func,
 
-  style: PropTypes.object,
+  styles: PropTypes.object
 };
 
 EnvelopeGraph.defaultProps = {

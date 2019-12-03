@@ -27,9 +27,25 @@
                 xs: 0.5,
                 xr: 0.2
               }}
-              dndBox={{
-                height: 1,
-                width: 1
+              styles={{
+                line: {
+                  fill: "none",
+                  stroke: "red",
+                  strokeWidth: 2,
+                },
+                background: {
+                  fill: "black"
+                },
+                dndBox: {
+                  fill: "none",
+                  stroke: "blue",
+                  strokeWidth: 0.1,
+                  height: 1,
+                  width: 1
+                },
+                dndBoxActive: {
+                  fill: "blue",
+                }
               }}
               onAttackChange={({ xa, ya }) => console.log(`xa: ${xa}, ya: ${ya}`)}
               onDecayChange={xd => console.log("xd:", xd)}
