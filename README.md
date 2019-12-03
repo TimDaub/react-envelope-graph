@@ -86,6 +86,10 @@ is a list of the current limitations:
 
 ## Changelog
 
+### 0.0.3
+
+- Bugfix: When mouse leaves graph, DnD stops
+
 ### 0.0.2
 
 - Event subscriptions
