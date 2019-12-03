@@ -113,6 +113,12 @@ is a list of the current limitations:
 
 ## Changelog
 
+### 0.0.6
+
+- Add cut corners to graph
+- Allow definition of `padding` through native `style` prop and remove
+`marginTop`, `marginRight`, `marginBottom`, and `marginRight` props
+
 ### 0.0.5
 
 - Improve support for `styles` prop to allow to styling of the component
