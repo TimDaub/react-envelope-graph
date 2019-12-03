@@ -63,6 +63,7 @@ class EnvelopeGraph extends React.Component {
     });
 
     this.onWindowResize = this.onWindowResize.bind(this);
+    this.handleGraphExit = this.handleGraphExit.bind(this);
   }
 
   componentDidMount() {
@@ -77,6 +78,25 @@ class EnvelopeGraph extends React.Component {
     // NOTE: As the svg preserves it's aspect ratio, we have to calculate only
     // one value that accounts for both width and height ratios.
     this.setState({ svgRatio: width / viewBox.width });
+
+    // NOTE: In case a user's mouse leaves the graph, we want the drag to stop.
+    // For this, we need to listen on the whole document, as listening just to
+    // events within the graph's box, would yield incorrect results in cases
+    // where the user's mouse moves really fast.
+    document.addEventListener("mousemove", this.handleGraphExit);
+  }
+
+  handleGraphExit(event) {
+    const rect = this.refs.box.getBoundingClientRect();
+
+    if (
+      event.clientX <= rect.x ||
+      event.clientX + rect.left >= rect.right ||
+      event.clientY <= rect.top ||
+      event.clientY + rect.top >= rect.bottom
+    ) {
+      this.setState({ drag: null });
+    }
   }
 
   getPhaseLengths() {
@@ -283,7 +303,6 @@ class EnvelopeGraph extends React.Component {
 
       if (drag === type) {
         const rect = event.target.getBoundingClientRect();
-
         if (type === "attack") {
           const xaNew = (event.clientX - rect.left + marginLeft) / svgRatio;
           let newState = {};
