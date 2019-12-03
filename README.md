@@ -89,9 +89,13 @@ Help is very much appreciated. I'll try to handle PRs as fast as I can. Below
 is a list of the current limitations:
 
 - [ ] The `ya` value cannot be set via dragging
-- [ ] Touch listeners are not yet implemented
+- [ ] [Touch listeners are not yet implemented](https://gist.github.com/hartzis/b34a4beeb5ceb4bf1ed8659e477c4191)
 
 ## Changelog
+
+### 0.0.4
+
+- DnD box's size now configurable
 
 ### 0.0.3
 
