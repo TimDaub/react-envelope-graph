@@ -15,9 +15,9 @@
         <script type="text/babel">
           var graph = (
             <ReactEnvelopeGraph
-              width="100%"
+              width="95%"
               height="20%"
-              defaultXa={1}
+              defaultXa={0}
               defaultXd={0.5}
               defaultYs={0.5}
               defaultXr={0.7}
@@ -27,14 +27,15 @@
                 xs: 0.25,
                 xr: 0.25
               }}
+              style={{
+                backgroundColor: "black",
+                padding: "2.5%",
+              }}
               styles={{
                 line: {
                   fill: "none",
                   stroke: "red",
                   strokeWidth: 2,
-                },
-                background: {
-                  fill: "black"
                 },
                 dndBox: {
                   fill: "none",
@@ -45,6 +46,10 @@
                 },
                 dndBoxActive: {
                   fill: "blue",
+                  stroke: "blue",
+                  strokeWidth: 0.1,
+                  height: 1,
+                  width: 1
                 }
               }}
               onAttackChange={({ xa, ya }) => console.log(`xa: ${xa}, ya: ${ya}`)}

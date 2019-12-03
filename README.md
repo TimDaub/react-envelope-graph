@@ -34,7 +34,7 @@ and then use it:
 function App() {
   return (
     <EnvelopeGraph
-      width="100%"
+      width="98%"
       height="20%"
       defaultXa={1}
       defaultXd={0.5}
@@ -46,14 +46,15 @@ function App() {
         xs: 0.5,
         xr: 0.2
       }}
+      style={{
+        backgroundColor: "black",
+        padding: "2.5%",
+      }}
       styles={{
         line: {
           fill: "none",
           stroke: "red",
           strokeWidth: 2,
-        },
-        background: {
-          fill: "black"
         },
         dndBox: {
           fill: "none",
@@ -89,9 +90,8 @@ listener hooks only return a single float.
   `em`) as they set values on SVG components
 - Note that `styles` is not a regular `style` prop, but a custom prop that 
 additionally allows to configure interaction reactions too
-- Optional props: `marginTop`, `marginRight`, `marginBottom`, `marginLeft`,
-`ratio`, `dndBox`, `onAttackChange`, `onDecayChange`, `onSustainChange`,
-`onReleaseChange`, `style`
+- Optional props: `ratio`, `dndBox`, `onAttackChange`, `onDecayChange`,
+  `onSustainChange`, `onReleaseChange`, `style`
 
 ## Contributing
 

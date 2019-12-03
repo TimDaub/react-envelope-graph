@@ -23,14 +23,32 @@ let styles = {
     stroke: "white",
     strokeWidth: 0.1
   },
-  background: {
-    fill: "rgb(40, 56, 68)"
+  corners: {
+    strokeWidth: 0.25,
+    length: 2,
+    stroke: "white"
   }
 };
 
 const viewBox = {
   width: 100,
-  height: 20
+  height: 20,
+  marginTop:
+    2 * styles.corners.strokeWidth +
+    styles.dndBox.height / 2 +
+    styles.dndBox.strokeWidth,
+  marginRight:
+    2 * styles.corners.strokeWidth +
+    styles.dndBox.width / 2 +
+    styles.dndBox.strokeWidth,
+  marginBottom:
+    2 * styles.corners.strokeWidth +
+    styles.dndBox.height / 2 +
+    styles.dndBox.strokeWidth,
+  marginLeft:
+    2 * styles.corners.strokeWidth +
+    styles.dndBox.width / 2 +
+    styles.dndBox.strokeWidth
 };
 
 class EnvelopeGraph extends React.Component {
@@ -169,31 +187,70 @@ class EnvelopeGraph extends React.Component {
   }
 
   renderCorners() {
-    const { marginTop, marginRight, marginBottom, marginLeft } = this.props;
-    const length = 2;
-    const strokeWidth = 0.25;
-    const stroke = "white"
+    const { marginTop, marginRight, marginBottom, marginLeft } = viewBox;
+    const { length, stroke, strokeWidth } = styles.corners;
 
     // NOTE: We draw the paths clockwise.
     return [
-      <path key="top-left-corner" fill="none" stroke={stroke} strokeWidth={strokeWidth} d={`M ${marginLeft},${marginTop+length} V ${marginTop} H ${marginLeft+length}`} />,
-      <path key="top-right-corner" fill="none" stroke={stroke} strokeWidth={strokeWidth} d={`M ${viewBox.width+marginLeft-length},${marginTop} H ${viewBox.width+marginLeft} V ${marginTop+length}`} />,
-      <path key="bottom-right-corner" fill="none" stroke={stroke} strokeWidth={strokeWidth} d={`M ${viewBox.width+marginLeft},${viewBox.height+marginTop-length} V ${viewBox.height+marginTop} H ${viewBox.width+marginLeft-length}`} />,
-      <path key="bottom-left-corner" fill="none" stroke={stroke} strokeWidth={strokeWidth} d={`M ${marginLeft+length},${viewBox.height+marginTop} H ${marginLeft} V ${viewBox.height+marginTop-length}`} />,
-    ]
+      <path
+        key="top-left-corner"
+        fill="none"
+        stroke={stroke}
+        strokeWidth={strokeWidth}
+        d={`M ${strokeWidth},${strokeWidth +
+          length} V ${strokeWidth} H ${strokeWidth + length}`}
+      />,
+      <path
+        key="top-right-corner"
+        fill="none"
+        stroke={stroke}
+        strokeWidth={strokeWidth}
+        d={`M ${viewBox.width +
+          marginLeft +
+          2 * strokeWidth -
+          length},${strokeWidth} H ${viewBox.width +
+          marginLeft +
+          marginRight -
+          strokeWidth} V ${strokeWidth + length}`}
+      />,
+      <path
+        key="bottom-right-corner"
+        fill="none"
+        stroke={stroke}
+        strokeWidth={strokeWidth}
+        d={`M ${viewBox.width +
+          marginLeft +
+          marginRight -
+          strokeWidth},${viewBox.height +
+          marginTop +
+          2 * strokeWidth -
+          length} V ${viewBox.height +
+          marginTop +
+          marginBottom -
+          strokeWidth} H ${viewBox.width +
+          marginLeft +
+          2 * strokeWidth -
+          length}`}
+      />,
+      <path
+        key="bottom-left-corner"
+        fill="none"
+        stroke={stroke}
+        strokeWidth={strokeWidth}
+        d={`M ${marginLeft + length - 2 * strokeWidth},${viewBox.height +
+          marginTop +
+          marginBottom -
+          strokeWidth} H ${strokeWidth} V ${viewBox.height +
+          marginTop -
+          length +
+          strokeWidth}`}
+      />
+    ];
   }
 
   render() {
-    const {
-      width,
-      height,
-      phaseLines,
-      marginTop,
-      marginRight,
-      marginBottom,
-      marginLeft,
-      corners
-    } = this.props;
+    const { width, height, phaseLines, corners } = this.props;
+    const { marginTop, marginRight, marginBottom, marginLeft } = viewBox;
     const { drag } = this.state;
 
     const w = viewBox.width + marginLeft + marginRight;
@@ -202,20 +259,20 @@ class EnvelopeGraph extends React.Component {
 
     return (
       <svg
+        style={Object.assign(
+          {
+            height,
+            width,
+            cursor: drag ? "none" : "auto"
+          },
+          this.props.style
+        )}
+        onMouseMove={drag ? this.moveDnDRect(drag) : null}
+        onMouseUp={() => this.setState({ drag: null })}
+        onDragStart={() => false}
         ref="box"
         viewBox={vb}
-        style={Object.assign({ height, width }, this.props.style)}
       >
-        <rect
-          width={w}
-          height={h}
-          style={Object.assign({}, styles.background, {
-            cursor: drag ? "none" : null
-          })}
-          onMouseMove={drag ? this.moveDnDRect(drag) : null}
-          onMouseUp={() => this.setState({ drag: null })}
-          onDragStart={() => false}
-        />
         <path
           transform={`translate(${marginLeft}, ${marginTop})`}
           d={this.generatePath()}
@@ -237,13 +294,8 @@ class EnvelopeGraph extends React.Component {
       sustainWidth,
       releaseWidth
     ] = this.getPhaseLengths();
-    const {
-      phaseLines,
-      marginTop,
-      marginRight,
-      marginBottom,
-      marginLeft
-    } = this.props;
+    const { phaseLines } = this.props;
+    const { marginTop, marginRight, marginBottom, marginLeft } = viewBox;
     const { ys, drag } = this.state;
     const rHeight = styles.dndBox.height;
     const rWidth = styles.dndBox.width;
@@ -271,8 +323,6 @@ class EnvelopeGraph extends React.Component {
     return (
       <rect
         onMouseDown={() => this.setState({ drag: type })}
-        onMouseUp={() => this.setState({ drag: null })}
-        onDragStart={() => false}
         x={x}
         y={y}
         width={rWidth}
@@ -321,6 +371,15 @@ class EnvelopeGraph extends React.Component {
     }
   }
 
+  extractPadding() {
+    const computedStyle = window.getComputedStyle(this.refs.box);
+    const padding = {};
+    ["paddingTop", "paddingRight", "paddingBottom", "paddingLeft"].map(
+      key => (padding[key] = parseFloat(computedStyle[key]))
+    );
+    return padding;
+  }
+
   moveDnDRect(type) {
     return event => {
       event.stopPropagation();
@@ -331,15 +390,22 @@ class EnvelopeGraph extends React.Component {
         sustainWidth,
         releaseWidth
       ] = this.getPhaseLengths();
-      const { marginTop, marginRight, marginBottom, marginLeft } = this.props;
+      const { marginTop, marginRight, marginBottom, marginLeft } = viewBox;
       const { drag, xa, xd, xr, ratio, svgRatio } = this.state;
 
       if (drag === type) {
-        const rect = event.target.getBoundingClientRect();
+        const rect = this.refs.box.getBoundingClientRect();
+        const {
+          paddingTop,
+          paddingRight,
+          paddingBottom,
+          paddingLeft
+        } = this.extractPadding();
         if (type === "attack") {
-          const xaNew = (event.clientX - rect.left + marginLeft) / svgRatio;
+          const xaNew =
+            (event.clientX - rect.left - paddingLeft + marginLeft) / svgRatio;
           let newState = {};
-          if (xaNew <= ratio.xa * viewBox.width) {
+          if (xaNew <= ratio.xa * viewBox.width && xaNew >= 0) {
             newState.xa = xaNew;
           }
 
@@ -353,14 +419,19 @@ class EnvelopeGraph extends React.Component {
           this.setState(newState);
         } else if (type === "decaysustain") {
           const ysNew =
-            1 - (event.clientY - rect.top) / viewBox.height / svgRatio;
+            1 -
+            (event.clientY - rect.top - paddingTop) / viewBox.height / svgRatio;
 
           let newState = {};
           if (ysNew >= 0 && ysNew <= 1) {
             newState.ys = ysNew;
           }
           const xdNew =
-            (event.clientX - rect.left + marginLeft - attackWidth * svgRatio) /
+            (event.clientX -
+              rect.left -
+              paddingLeft +
+              marginLeft -
+              attackWidth * svgRatio) /
             svgRatio;
 
           if (xdNew >= 0 && xdNew <= ratio.xd * viewBox.width) {
@@ -372,6 +443,7 @@ class EnvelopeGraph extends React.Component {
           const xrNew =
             (event.clientX -
               rect.left +
+              paddingLeft +
               marginLeft -
               (attackWidth + decayWidth + sustainWidth) * svgRatio) /
             svgRatio;
@@ -387,11 +459,6 @@ class EnvelopeGraph extends React.Component {
 EnvelopeGraph.propTypes = {
   height: PropTypes.any.isRequired,
   width: PropTypes.any.isRequired,
-
-  marginTop: PropTypes.number,
-  marginRight: PropTypes.number,
-  marginBottom: PropTypes.number,
-  marginLeft: PropTypes.number,
 
   defaultXa: PropTypes.number.isRequired,
   defaultXd: PropTypes.number.isRequired,
@@ -417,18 +484,15 @@ EnvelopeGraph.propTypes = {
   onSustainChange: PropTypes.func,
   onReleaseChange: PropTypes.func,
 
+  style: PropTypes.object,
   styles: PropTypes.object,
   corners: PropTypes.bool
 };
 
 EnvelopeGraph.defaultProps = {
-  marginTop: 1,
-  marginRight: 1,
-  marginBottom: 1,
-  marginLeft: 1,
   corners: true,
   // TODO: Remove when ya implemented.
-  defaultYa: 1,
+  defaultYa: 1
 };
 
 export default EnvelopeGraph;
