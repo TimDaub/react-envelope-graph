@@ -48,6 +48,23 @@ class EnvelopeGraph extends React.Component {
       );
     }
 
+    if (
+      props.dndBox &&
+      typeof props.dndBox.height === "number" &&
+      typeof props.dndBox.width === "number"
+    ) {
+      this.state.dndBox = props.dndBox;
+    } else if (!props.dndBox) {
+      this.state.dndBox = {
+        height: 0.75,
+        width: 0.75
+      };
+    } else {
+      throw new Error(
+        "dndBox needs to have values of type 'number': height, width"
+      );
+    }
+
     this.state = Object.assign(this.state, {
       xa: props.defaultXa * viewBox.width * this.state.ratio.xa,
       xd: props.defaultXd * viewBox.width * this.state.ratio.xd,
@@ -189,7 +206,7 @@ class EnvelopeGraph extends React.Component {
         <path
           transform={`translate(${marginLeft}, ${marginTop})`}
           d={this.generatePath()}
-          style={Object.assign({}, styles.line, this.props.lineStyle)}
+          style={styles.line}
           vectorEffect="non-scaling-stroke"
         />
         {this.renderDnDRect("attack")}
@@ -213,10 +230,9 @@ class EnvelopeGraph extends React.Component {
       marginBottom,
       marginLeft
     } = this.props;
-    const { ys, drag } = this.state;
-
-    const rHeight = 0.75;
-    const rWidth = 0.75;
+    const { ys, drag, dndBox } = this.state;
+    const rHeight = dndBox.height;
+    const rWidth = dndBox.width;
 
     let x, y;
     if (type === "attack") {
@@ -241,6 +257,8 @@ class EnvelopeGraph extends React.Component {
     return (
       <rect
         onMouseDown={() => this.setState({ drag: type })}
+        onMouseUp={() => this.setState({ drag: null })}
+        onDragStart={() => false}
         x={x}
         y={y}
         width={rWidth}
@@ -374,13 +392,17 @@ EnvelopeGraph.propTypes = {
     xr: PropTypes.number
   }),
 
+  dndBox: PropTypes.shape({
+    height: PropTypes.number,
+    width: PropTypes.number
+  }),
+
   onAttackChange: PropTypes.func,
   onDecayChange: PropTypes.func,
   onSustainChange: PropTypes.func,
   onReleaseChange: PropTypes.func,
 
   style: PropTypes.object,
-  lineStyle: PropTypes.object
 };
 
 EnvelopeGraph.defaultProps = {

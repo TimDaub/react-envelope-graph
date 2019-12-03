@@ -46,6 +46,10 @@ function App() {
         xs: 0.5,
         xr: 0.2
       }}
+      dndBox={{
+        height: 1,
+        width: 1
+      }}
       onAttackChange={({ xa, ya }) => console.log(`xa: ${xa}, ya: ${ya}`)}
       onDecayChange={xd => console.log("xd:", xd)}
       onSustainChange={ys => console.log("ys:", ys)}
@@ -65,6 +69,9 @@ between 0 and 1
 - In `ratio` the sum of all values needs to be `<= 1`
 - `onAttackChange` returns an object containing `xa` and `ya`. All other
 listener hooks only return a single float.
+- Optional props: `marginTop`, `marginRight`, `marginBottom`, `marginLeft`,
+`ratio`, `dndBox`, `onAttackChange`, `onDecayChange`, `onSustainChange`,
+`onReleaseChange`, `style`
 
 ## Contributing
 
