@@ -1,6 +1,6 @@
 {
   "name": "react-envelope-graph",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "A drag-and-drop-enabled, responsive, envelope graph that allows to shape a wave with attack, decay, sustain and release",
   "main": "dist/react-envelope-graph.cjs.js",
   "unpkg": "dist/react-envelope-graph.umd.js",

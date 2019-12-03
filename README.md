@@ -113,6 +113,10 @@ is a list of the current limitations:
 
 ## Changelog
 
+### 0.0.7
+
+- Bugfix: Left top corner same length as others
+
 ### 0.0.6
 
 - Add cut corners to graph
