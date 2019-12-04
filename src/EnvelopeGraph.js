@@ -25,7 +25,7 @@ let styles = {
   },
   corners: {
     strokeWidth: 0.25,
-    length: 2,
+    length: 1,
     stroke: "white"
   }
 };
@@ -197,8 +197,8 @@ class EnvelopeGraph extends React.Component {
         fill="none"
         stroke={stroke}
         strokeWidth={strokeWidth}
-        d={`M ${strokeWidth},${2 * strokeWidth +
-          length} V ${strokeWidth} H ${2 * strokeWidth + length}`}
+        d={`M ${strokeWidth},${strokeWidth +
+          length} V ${strokeWidth} H ${strokeWidth + length}`}
       />,
       <path
         key="top-right-corner"
@@ -206,9 +206,8 @@ class EnvelopeGraph extends React.Component {
         stroke={stroke}
         strokeWidth={strokeWidth}
         d={`M ${viewBox.width +
-          marginLeft +
-          2 * strokeWidth -
-          length},${strokeWidth} H ${viewBox.width +
+          marginLeft + marginRight -
+          length - strokeWidth},${strokeWidth} H ${viewBox.width +
           marginLeft +
           marginRight -
           strokeWidth} V ${strokeWidth + length}`}
@@ -219,30 +218,27 @@ class EnvelopeGraph extends React.Component {
         stroke={stroke}
         strokeWidth={strokeWidth}
         d={`M ${viewBox.width +
-          marginLeft +
-          marginRight -
-          strokeWidth},${viewBox.height +
-          marginTop +
-          2 * strokeWidth -
+          marginLeft + marginRight
+          - strokeWidth},${viewBox.height +
+          marginTop + marginBottom -
+          strokeWidth -
           length} V ${viewBox.height +
           marginTop +
           marginBottom -
           strokeWidth} H ${viewBox.width +
-          marginLeft +
-          2 * strokeWidth -
-          length}`}
+          marginLeft + marginRight - length - strokeWidth}`}
       />,
       <path
         key="bottom-left-corner"
         fill="none"
         stroke={stroke}
         strokeWidth={strokeWidth}
-        d={`M ${marginLeft + length - 2 * strokeWidth},${viewBox.height +
+        d={`M ${length + strokeWidth},${viewBox.height +
           marginTop +
           marginBottom -
           strokeWidth} H ${strokeWidth} V ${viewBox.height +
-          marginTop -
-          length +
+          marginTop + marginBottom -
+          length -
           strokeWidth}`}
       />
     ];
