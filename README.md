@@ -113,6 +113,11 @@ is a list of the current limitations:
 
 ## Changelog
 
+### 0.0.9
+
+- Bugfix: Dragging the function works even thought the graph has any type of
+  padding
+
 ### 0.0.8
 
 - Bugfix: Yet fixing corner length another time...
@@ -148,7 +153,7 @@ is a list of the current limitations:
 
 ### 0.0.1
 
-- Drop and draggable ADSR graph
+- Dragable ADSR graph
 
 ## License
 
