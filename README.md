@@ -113,6 +113,10 @@ is a list of the current limitations:
 
 ## Changelog
 
+### 0.0.8
+
+- Bugfix: Yet fixing corner length another time...
+
 ### 0.0.7
 
 - Bugfix: Left top corner same length as others
