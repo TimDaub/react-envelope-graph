@@ -93,7 +93,6 @@ class EnvelopeGraph extends React.Component {
     });
 
     this.onWindowResize = this.onWindowResize.bind(this);
-    this.handleGraphExit = this.handleGraphExit.bind(this);
 
     styles = Object.assign(styles, props.styles);
   }
@@ -112,23 +111,11 @@ class EnvelopeGraph extends React.Component {
     this.setState({ svgRatio: width / viewBox.width });
 
     // NOTE: In case a user's mouse leaves the graph, we want the drag to stop.
-    // For this, we need to listen on the whole document, as listening just to
-    // events within the graph's box, would yield incorrect results in cases
-    // where the user's mouse moves really fast.
-    document.addEventListener("mousemove", this.handleGraphExit);
-  }
-
-  handleGraphExit(event) {
-    const rect = this.refs.box.getBoundingClientRect();
-
-    if (
-      event.clientX <= rect.x ||
-      event.clientX + rect.left >= rect.right ||
-      event.clientY <= rect.top ||
-      event.clientY + rect.top >= rect.bottom
-    ) {
-      this.setState({ drag: null });
-    }
+    // We use the mouseleave event here. Note that an element is only be
+    // declared 'left' once also the padding has been left.
+    this.refs.box.addEventListener("mouseleave", () =>
+      this.setState({ drag: null })
+    );
   }
 
   getPhaseLengths() {
@@ -206,8 +193,10 @@ class EnvelopeGraph extends React.Component {
         stroke={stroke}
         strokeWidth={strokeWidth}
         d={`M ${viewBox.width +
-          marginLeft + marginRight -
-          length - strokeWidth},${strokeWidth} H ${viewBox.width +
+          marginLeft +
+          marginRight -
+          length -
+          strokeWidth},${strokeWidth} H ${viewBox.width +
           marginLeft +
           marginRight -
           strokeWidth} V ${strokeWidth + length}`}
@@ -218,15 +207,20 @@ class EnvelopeGraph extends React.Component {
         stroke={stroke}
         strokeWidth={strokeWidth}
         d={`M ${viewBox.width +
-          marginLeft + marginRight
-          - strokeWidth},${viewBox.height +
-          marginTop + marginBottom -
+          marginLeft +
+          marginRight -
+          strokeWidth},${viewBox.height +
+          marginTop +
+          marginBottom -
           strokeWidth -
           length} V ${viewBox.height +
           marginTop +
           marginBottom -
           strokeWidth} H ${viewBox.width +
-          marginLeft + marginRight - length - strokeWidth}`}
+          marginLeft +
+          marginRight -
+          length -
+          strokeWidth}`}
       />,
       <path
         key="bottom-left-corner"
@@ -237,7 +231,8 @@ class EnvelopeGraph extends React.Component {
           marginTop +
           marginBottom -
           strokeWidth} H ${strokeWidth} V ${viewBox.height +
-          marginTop + marginBottom -
+          marginTop +
+          marginBottom -
           length -
           strokeWidth}`}
       />
@@ -245,7 +240,7 @@ class EnvelopeGraph extends React.Component {
   }
 
   render() {
-    const { width, height, phaseLines, corners } = this.props;
+    const { width, height, corners } = this.props;
     const { marginTop, marginRight, marginBottom, marginLeft } = viewBox;
     const { drag } = this.state;
 
@@ -290,7 +285,6 @@ class EnvelopeGraph extends React.Component {
       sustainWidth,
       releaseWidth
     ] = this.getPhaseLengths();
-    const { phaseLines } = this.props;
     const { marginTop, marginRight, marginBottom, marginLeft } = viewBox;
     const { ys, drag } = this.state;
     const rHeight = styles.dndBox.height;
