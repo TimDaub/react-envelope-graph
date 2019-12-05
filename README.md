@@ -114,6 +114,10 @@ is a list of the current limitations:
 
 ## Changelog
 
+### 0.0.10
+
+- Bugfix: Remove `ratio.xs` from configurable params
+
 ### 0.0.9
 
 - Bugfix: Dragging the function works even thought the graph has any type of
