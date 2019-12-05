@@ -61,7 +61,6 @@ class EnvelopeGraph extends React.Component {
       props.ratio &&
       typeof props.ratio.xa === "number" &&
       typeof props.ratio.xd === "number" &&
-      typeof props.ratio.xs === "number" &&
       typeof props.ratio.xr === "number"
     ) {
       this.state.ratio = props.ratio;
@@ -69,12 +68,15 @@ class EnvelopeGraph extends React.Component {
       this.state.ratio = {
         xa: 0.25,
         xd: 0.25,
-        xs: 0.25,
         xr: 0.25
       };
+    } else if (typeof props.ratio.xs === "number") {
+      throw new Error(
+        "Configuring ratio with parameter 'xs' is not supported."
+      );
     } else {
       throw new Error(
-        "ratio needs to have values of type 'number': xa, xd, xs, xr"
+        "ratio needs to have values of type 'number': xa, xd, xr"
       );
     }
 
@@ -119,10 +121,10 @@ class EnvelopeGraph extends React.Component {
   }
 
   getPhaseLengths() {
-    const { xa, xd, xr, ratio } = this.state;
+    const { xa, xd, xr } = this.state;
 
     // NOTE: We're subtracting 1/4 of the width to reserve space for release.
-    const absoluteS = viewBox.width - xa - xd - ratio.xs * viewBox.width;
+    const absoluteS = viewBox.width - xa - xd - 0.25 * viewBox.width;
 
     return [xa, xd, absoluteS, xr];
   }
@@ -460,7 +462,6 @@ EnvelopeGraph.propTypes = {
   ratio: PropTypes.shape({
     xa: PropTypes.number,
     xd: PropTypes.number,
-    xs: PropTypes.number,
     xr: PropTypes.number
   }),
 

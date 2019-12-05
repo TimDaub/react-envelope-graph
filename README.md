@@ -43,7 +43,6 @@ function App() {
       ratio={{
         xa: 0.25,
         xd: 0.25,
-        xs: 0.5,
         xr: 0.2
       }}
       style={{
@@ -92,6 +91,8 @@ listener hooks only return a single float.
 additionally allows to configure interaction reactions too
 - Optional props: `ratio`, `dndBox`, `onAttackChange`, `onDecayChange`,
   `onSustainChange`, `onReleaseChange`, `style`
+- `ratio.xs` is internally set to `0.25`
+
 
 ## Contributing
 
