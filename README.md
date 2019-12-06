@@ -34,7 +34,7 @@ and then use it:
 function App() {
   return (
     <EnvelopeGraph
-      width="98%"
+      width="95%"
       height="20%"
       defaultXa={1}
       defaultXd={0.5}
@@ -77,21 +77,21 @@ function App() {
 
 ### Notes
 
-- Width/height ratio is preserved
 - `width` and `height` can be specified in `px` and `%`. I'm currently unsure
 why e.g. `vh` doesn't work...
 - `defaultXa`, `defaultXd`, `defaultYs` and `defaultXr` need to have a value
 between 0 and 1
-- In `ratio` the sum of all values needs to be `<= 1`
+- In `ratio` the sum of all values needs to be `<= 0.75`. The ratio of `xs`
+cannot be specified. It always needs to remain `x === 0.25`
 - `onAttackChange` returns an object containing `xa` and `ya`. All other
 listener hooks only return a single float.
 - Most numeric values in the `styles` prop should not use a unit (e.g. `px` or
   `em`) as they set values on SVG components
 - Note that `styles` is not a regular `style` prop, but a custom prop that 
 additionally allows to configure interaction reactions too
+- To regularly style the component, use the `style` prop
 - Optional props: `ratio`, `dndBox`, `onAttackChange`, `onDecayChange`,
   `onSustainChange`, `onReleaseChange`, `style`
-- `ratio.xs` is internally set to `0.25`
 
 
 ## Contributing

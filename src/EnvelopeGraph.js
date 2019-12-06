@@ -31,8 +31,6 @@ let styles = {
 };
 
 const viewBox = {
-  width: 100,
-  height: 20,
   marginTop:
     2 * styles.corners.strokeWidth +
     styles.dndBox.height / 2 +
@@ -56,6 +54,23 @@ class EnvelopeGraph extends React.Component {
     super(props);
 
     this.state = {};
+    const width = parseFloat(props.width);
+    const height = parseFloat(props.height);
+    if (width >= height) {
+      const ratio = height / width;
+      this.state.graph = {
+        ratio,
+        width: 100,
+        height: 100 * ratio
+      }
+    } else {
+      const ratio = width / height;
+      this.state.graph = {
+        ratio,
+        width: 100 * ratio,
+        height: 100
+      }
+    }
 
     if (
       props.ratio &&
@@ -81,9 +96,9 @@ class EnvelopeGraph extends React.Component {
     }
 
     this.state = Object.assign(this.state, {
-      xa: props.defaultXa * viewBox.width * this.state.ratio.xa,
-      xd: props.defaultXd * viewBox.width * this.state.ratio.xd,
-      xr: props.defaultXr * viewBox.width * this.state.ratio.xr,
+      xa: props.defaultXa * this.state.graph.width * this.state.ratio.xa,
+      xd: props.defaultXd * this.state.graph.width * this.state.ratio.xd,
+      xr: props.defaultXr * this.state.graph.width * this.state.ratio.xr,
 
       // NOTE: Dragging attack in y direction is currently not implemented.
       ya: props.defaultYa,
@@ -110,7 +125,7 @@ class EnvelopeGraph extends React.Component {
 
     // NOTE: As the svg preserves it's aspect ratio, we have to calculate only
     // one value that accounts for both width and height ratios.
-    this.setState({ svgRatio: width / viewBox.width });
+    this.setState({ svgRatio: width / this.state.graph.width });
 
     // NOTE: In case a user's mouse leaves the graph, we want the drag to stop.
     // We use the mouseleave event here. Note that an element is only be
@@ -124,7 +139,7 @@ class EnvelopeGraph extends React.Component {
     const { xa, xd, xr } = this.state;
 
     // NOTE: We're subtracting 1/4 of the width to reserve space for release.
-    const absoluteS = viewBox.width - xa - xd - 0.25 * viewBox.width;
+    const absoluteS = this.state.graph.width - xa - xd - 0.25 * this.state.graph.width;
 
     return [xa, xd, absoluteS, xr];
   }
@@ -144,13 +159,13 @@ class EnvelopeGraph extends React.Component {
     ] = this.getPhaseLengths();
 
     let strokes = [];
-    strokes.push("M 0 " + viewBox.height);
-    strokes.push(this.exponentialStrokeTo(attackWidth, -viewBox.height));
+    strokes.push("M 0 " + this.state.graph.height);
+    strokes.push(this.exponentialStrokeTo(attackWidth, -this.state.graph.height));
     strokes.push(
-      this.exponentialStrokeTo(decayWidth, viewBox.height * (1 - ys))
+      this.exponentialStrokeTo(decayWidth, this.state.graph.height * (1 - ys))
     );
     strokes.push(this.linearStrokeTo(sustainWidth, 0));
-    strokes.push(this.exponentialStrokeTo(releaseWidth, viewBox.height * ys));
+    strokes.push(this.exponentialStrokeTo(releaseWidth, this.state.graph.height * ys));
 
     return strokes.join(" ");
   }
@@ -194,11 +209,11 @@ class EnvelopeGraph extends React.Component {
         fill="none"
         stroke={stroke}
         strokeWidth={strokeWidth}
-        d={`M ${viewBox.width +
+        d={`M ${this.state.graph.width +
           marginLeft +
           marginRight -
           length -
-          strokeWidth},${strokeWidth} H ${viewBox.width +
+          strokeWidth},${strokeWidth} H ${this.state.graph.width +
           marginLeft +
           marginRight -
           strokeWidth} V ${strokeWidth + length}`}
@@ -208,17 +223,17 @@ class EnvelopeGraph extends React.Component {
         fill="none"
         stroke={stroke}
         strokeWidth={strokeWidth}
-        d={`M ${viewBox.width +
+        d={`M ${this.state.graph.width +
           marginLeft +
           marginRight -
-          strokeWidth},${viewBox.height +
+          strokeWidth},${this.state.graph.height +
           marginTop +
           marginBottom -
           strokeWidth -
-          length} V ${viewBox.height +
+          length} V ${this.state.graph.height +
           marginTop +
           marginBottom -
-          strokeWidth} H ${viewBox.width +
+          strokeWidth} H ${this.state.graph.width +
           marginLeft +
           marginRight -
           length -
@@ -229,10 +244,10 @@ class EnvelopeGraph extends React.Component {
         fill="none"
         stroke={stroke}
         strokeWidth={strokeWidth}
-        d={`M ${length + strokeWidth},${viewBox.height +
+        d={`M ${length + strokeWidth},${this.state.graph.height +
           marginTop +
           marginBottom -
-          strokeWidth} H ${strokeWidth} V ${viewBox.height +
+          strokeWidth} H ${strokeWidth} V ${this.state.graph.height +
           marginTop +
           marginBottom -
           length -
@@ -246,8 +261,8 @@ class EnvelopeGraph extends React.Component {
     const { marginTop, marginRight, marginBottom, marginLeft } = viewBox;
     const { drag } = this.state;
 
-    const w = viewBox.width + marginLeft + marginRight;
-    const h = viewBox.height + marginTop + marginBottom;
+    const w = this.state.graph.width + marginLeft + marginRight;
+    const h = this.state.graph.height + marginTop + marginBottom;
     const vb = `0 0 ${w} ${h}`;
 
     return (
@@ -298,7 +313,7 @@ class EnvelopeGraph extends React.Component {
       y = marginTop - rHeight / 2;
     } else if (type === "decaysustain") {
       x = marginLeft + attackWidth + decayWidth - rWidth / 2;
-      y = marginTop + viewBox.height * (1 - ys) - rHeight / 2;
+      y = marginTop + this.state.graph.height * (1 - ys) - rHeight / 2;
     } else if (type === "release") {
       x =
         marginLeft +
@@ -307,7 +322,7 @@ class EnvelopeGraph extends React.Component {
         sustainWidth +
         releaseWidth -
         rWidth / 2;
-      y = marginTop + viewBox.height - rHeight / 2;
+      y = marginTop + this.state.graph.height - rHeight / 2;
     } else {
       throw new Error("Invalid type for DnDRect");
     }
@@ -347,18 +362,18 @@ class EnvelopeGraph extends React.Component {
     // NOTE: Currently ya cannot be changed, so we're not checking it's
     // condition here.
     if (prevState.xa !== xa && onAttackChange) {
-      const relationXa = ((xa / viewBox.width) * 1) / ratio.xa;
+      const relationXa = ((xa / this.state.graph.width) * 1) / ratio.xa;
       onAttackChange({ xa: relationXa, ya });
     }
     if (prevState.xd !== xd && onDecayChange) {
-      const relationXd = ((xd / viewBox.width) * 1) / ratio.xd;
+      const relationXd = ((xd / this.state.graph.width) * 1) / ratio.xd;
       onDecayChange(relationXd);
     }
     if (prevState.ys !== ys && onSustainChange) {
       onSustainChange(ys);
     }
     if (prevState.xr !== xr && onReleaseChange) {
-      const relationXr = ((xr / viewBox.width) * 1) / ratio.xr;
+      const relationXr = ((xr / this.state.graph.width) * 1) / ratio.xr;
       onReleaseChange(relationXr);
     }
   }
@@ -397,12 +412,12 @@ class EnvelopeGraph extends React.Component {
           const xaNew =
             (event.clientX - rect.left - paddingLeft + marginLeft) / svgRatio;
           let newState = {};
-          if (xaNew <= ratio.xa * viewBox.width && xaNew >= 0) {
+          if (xaNew <= ratio.xa * this.state.graph.width && xaNew >= 0) {
             newState.xa = xaNew;
           }
 
           const yaNew =
-            1 - (event.clientY - rect.top) / viewBox.height / svgRatio;
+            1 - (event.clientY - rect.top) / this.state.graph.height / svgRatio;
           if (yaNew >= 0 && yaNew <= 1) {
             // TODO: Readd ya and make sure graph is displayed correctly.
             //newState.ya = yaNew;
@@ -412,7 +427,7 @@ class EnvelopeGraph extends React.Component {
         } else if (type === "decaysustain") {
           const ysNew =
             1 -
-            (event.clientY - rect.top - paddingTop) / viewBox.height / svgRatio;
+            (event.clientY - rect.top - paddingTop) / this.state.graph.height / svgRatio;
 
           let newState = {};
           if (ysNew >= 0 && ysNew <= 1) {
@@ -426,7 +441,7 @@ class EnvelopeGraph extends React.Component {
               attackWidth * svgRatio) /
             svgRatio;
 
-          if (xdNew >= 0 && xdNew <= ratio.xd * viewBox.width) {
+          if (xdNew >= 0 && xdNew <= ratio.xd * this.state.graph.width) {
             newState.xd = xdNew;
           }
 
@@ -439,7 +454,7 @@ class EnvelopeGraph extends React.Component {
               marginLeft -
               (attackWidth + decayWidth + sustainWidth) * svgRatio) /
             svgRatio;
-          if (xrNew >= 0 && xrNew <= ratio.xr * viewBox.width) {
+          if (xrNew >= 0 && xrNew <= ratio.xr * this.state.graph.width) {
             this.setState({ xr: xrNew });
           }
         }
