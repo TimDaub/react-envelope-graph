@@ -114,6 +114,11 @@ is a list of the current limitations:
 
 ## Changelog
 
+### 0.0.11
+
+- When setting the props `height` and `width`, the graph's ratio is adjusts
+accordingly
+
 ### 0.0.10
 
 - Bugfix: Remove `ratio.xs` from configurable params
