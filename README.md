@@ -1,5 +1,7 @@
 # react-envelope-graph
 
+[![npm version](https://badge.fury.io/js/react-envelope-graph.svg)](https://badge.fury.io/js/react-envelope-graph)
+
 > A drag-and-drop-enabled, responsive, envelope graph that allows to shape a
 > wave with attack, decay, sustain and release.
 
