@@ -51,10 +51,7 @@
                   width: 1
                 }
               }}
-              onAttackChange={({ xa, ya }) => console.log(`xa: ${xa}, ya: ${ya}`)}
-              onDecayChange={xd => console.log("xd:", xd)}
-              onSustainChange={ys => console.log("ys:", ys)}
-              onReleaseChange={xr => console.log("xr:", xr)}
+              onChange={console.log}
             />
           )
           ReactDOM.render(graph, document.querySelector("#root"));

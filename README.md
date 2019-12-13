@@ -68,10 +68,7 @@ function App() {
           fill: "blue",
         }
       }}
-      onAttackChange={({ xa, ya }) => console.log(`xa: ${xa}, ya: ${ya}`)}
-      onDecayChange={xd => console.log("xd:", xd)}
-      onSustainChange={ys => console.log("ys:", ys)}
-      onReleaseChange={xr => console.log("xr:", xr)}
+      onChange={console.log}
     />
   );
 }
@@ -85,15 +82,12 @@ why e.g. `vh` doesn't work...
 between 0 and 1
 - In `ratio` the sum of all values needs to be `<= 0.75`. The ratio of `xs`
 cannot be specified. It always needs to remain `x === 0.25`
-- `onAttackChange` returns an object containing `xa` and `ya`. All other
-listener hooks only return a single float.
 - Most numeric values in the `styles` prop should not use a unit (e.g. `px` or
   `em`) as they set values on SVG components
 - Note that `styles` is not a regular `style` prop, but a custom prop that 
 additionally allows to configure interaction reactions too
 - To regularly style the component, use the `style` prop
-- Optional props: `ratio`, `dndBox`, `onAttackChange`, `onDecayChange`,
-  `onSustainChange`, `onReleaseChange`, `style`
+- Optional props: `ratio`, `dndBox`, `onChange`, `style`
 
 
 ## Contributing

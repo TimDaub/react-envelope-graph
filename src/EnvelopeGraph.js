@@ -62,14 +62,14 @@ class EnvelopeGraph extends React.Component {
         ratio,
         width: 100,
         height: 100 * ratio
-      }
+      };
     } else {
       const ratio = width / height;
       this.state.graph = {
         ratio,
         width: 100 * ratio,
         height: 100
-      }
+      };
     }
 
     if (
@@ -139,7 +139,8 @@ class EnvelopeGraph extends React.Component {
     const { xa, xd, xr } = this.state;
 
     // NOTE: We're subtracting 1/4 of the width to reserve space for release.
-    const absoluteS = this.state.graph.width - xa - xd - 0.25 * this.state.graph.width;
+    const absoluteS =
+      this.state.graph.width - xa - xd - 0.25 * this.state.graph.width;
 
     return [xa, xd, absoluteS, xr];
   }
@@ -160,12 +161,16 @@ class EnvelopeGraph extends React.Component {
 
     let strokes = [];
     strokes.push("M 0 " + this.state.graph.height);
-    strokes.push(this.exponentialStrokeTo(attackWidth, -this.state.graph.height));
+    strokes.push(
+      this.exponentialStrokeTo(attackWidth, -this.state.graph.height)
+    );
     strokes.push(
       this.exponentialStrokeTo(decayWidth, this.state.graph.height * (1 - ys))
     );
     strokes.push(this.linearStrokeTo(sustainWidth, 0));
-    strokes.push(this.exponentialStrokeTo(releaseWidth, this.state.graph.height * ys));
+    strokes.push(
+      this.exponentialStrokeTo(releaseWidth, this.state.graph.height * ys)
+    );
 
     return strokes.join(" ");
   }
@@ -351,30 +356,25 @@ class EnvelopeGraph extends React.Component {
   }
 
   notifyChanges(prevState) {
-    const { xa, ya, xd, ys, xr, ratio } = this.state;
-    const {
-      onAttackChange,
-      onDecayChange,
-      onSustainChange,
-      onReleaseChange
-    } = this.props;
+    const { xa, ya, xd, ys, xr, ratio, graph } = this.state;
+    const { onChange } = this.props;
 
-    // NOTE: Currently ya cannot be changed, so we're not checking it's
-    // condition here.
-    if (prevState.xa !== xa && onAttackChange) {
-      const relationXa = ((xa / this.state.graph.width) * 1) / ratio.xa;
-      onAttackChange({ xa: relationXa, ya });
-    }
-    if (prevState.xd !== xd && onDecayChange) {
-      const relationXd = ((xd / this.state.graph.width) * 1) / ratio.xd;
-      onDecayChange(relationXd);
-    }
-    if (prevState.ys !== ys && onSustainChange) {
-      onSustainChange(ys);
-    }
-    if (prevState.xr !== xr && onReleaseChange) {
-      const relationXr = ((xr / this.state.graph.width) * 1) / ratio.xr;
-      onReleaseChange(relationXr);
+    if (
+      prevState.xa !== xa ||
+      prevState.xd !== xd ||
+      prevState.ys !== ys ||
+      (prevState.xr !== xr && onChange)
+    ) {
+      const relationXa = ((xa / graph.width) * 1) / ratio.xa;
+      const relationXd = ((xd / graph.width) * 1) / ratio.xd;
+      const relationXr = ((xr / graph.width) * 1) / ratio.xr;
+      onChange({
+        xa: relationXa,
+        ya,
+        xd: relationXd,
+        ys,
+        xr: relationXr
+      });
     }
   }
 
@@ -427,7 +427,9 @@ class EnvelopeGraph extends React.Component {
         } else if (type === "decaysustain") {
           const ysNew =
             1 -
-            (event.clientY - rect.top - paddingTop) / this.state.graph.height / svgRatio;
+            (event.clientY - rect.top - paddingTop) /
+              this.state.graph.height /
+              svgRatio;
 
           let newState = {};
           if (ysNew >= 0 && ysNew <= 1) {
@@ -485,10 +487,7 @@ EnvelopeGraph.propTypes = {
     width: PropTypes.number
   }),
 
-  onAttackChange: PropTypes.func,
-  onDecayChange: PropTypes.func,
-  onSustainChange: PropTypes.func,
-  onReleaseChange: PropTypes.func,
+  onChange: PropTypes.func,
 
   style: PropTypes.object,
   styles: PropTypes.object,
