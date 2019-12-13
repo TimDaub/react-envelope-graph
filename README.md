@@ -110,6 +110,11 @@ is a list of the current limitations:
 
 ## Changelog
 
+### 0.1.1
+
+- Dirtyfix: Set `height`/`width` of graph to `100%` to respect ratio. I'll have
+to go back on that fix later...
+
 ### 0.1.0
 
 Breaking change: Removed functions `onAttackChange`, `onDecayChange`,
