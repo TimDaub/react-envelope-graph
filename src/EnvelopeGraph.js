@@ -262,7 +262,8 @@ class EnvelopeGraph extends React.Component {
   }
 
   render() {
-    const { width, height, corners } = this.props;
+    let { width, height } = this.props;
+    const { corners } = this.props;
     const { marginTop, marginRight, marginBottom, marginLeft } = viewBox;
     const { drag } = this.state;
 
@@ -270,15 +271,25 @@ class EnvelopeGraph extends React.Component {
     const h = this.state.graph.height + marginTop + marginBottom;
     const vb = `0 0 ${w} ${h}`;
 
+    let pHeight = parseFloat(height);
+    let pWidth = parseFloat(width);
+    let ratioStyle;
+
+    // TODO: If the values' units are e.g. % and px, then this check won't work
+    // anymore and we'll have a wrong result...
+    if (pHeight >= pWidth) {
+      ratioStyle = { width: "100%" };
+    } else {
+      ratioStyle = { height: "100%" };
+    }
     return (
       <svg
         style={Object.assign(
           {
-            height,
-            width,
             cursor: drag ? "none" : "auto"
           },
-          this.props.style
+          this.props.style,
+          ratioStyle
         )}
         onMouseMove={drag ? this.moveDnDRect(drag) : null}
         onMouseUp={() => this.setState({ drag: null })}
