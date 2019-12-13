@@ -110,6 +110,12 @@ is a list of the current limitations:
 
 ## Changelog
 
+### 0.1.0
+
+Breaking change: Removed functions `onAttackChange`, `onDecayChange`,
+`onSustainChange` and `onReleaseChange` in favor of `onChange`, which returns
+all values as an object
+
 ### 0.0.11
 
 - When setting the props `height` and `width`, the graph's ratio is adjusts
