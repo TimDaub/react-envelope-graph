@@ -36,8 +36,6 @@ and then use it:
 function App() {
   return (
     <EnvelopeGraph
-      width="95%"
-      height="20%"
       defaultXa={1}
       defaultXd={0.5}
       defaultYs={0.5}
@@ -50,6 +48,8 @@ function App() {
       style={{
         backgroundColor: "black",
         padding: "2.5%",
+        height: "100vh",
+        width: "20vw"
       }}
       styles={{
         line: {
@@ -76,16 +76,16 @@ function App() {
 
 ### Notes
 
-- `width` and `height` can be specified in `px` and `%`. I'm currently unsure
-why e.g. `vh` doesn't work...
+- The `height/width` ratio is preserved within the svg
+- `width` and `height` can be specified via the `style` prop
 - `defaultXa`, `defaultXd`, `defaultYs` and `defaultXr` need to have a value
-between 0 and 1
-- In `ratio` the sum of all values needs to be `<= 0.75`. The ratio of `xs`
-cannot be specified. It always needs to remain `x === 0.25`
-- Most numeric values in the `styles` prop should not use a unit (e.g. `px` or
-  `em`) as they set values on SVG components
-- Note that `styles` is not a regular `style` prop, but a custom prop that 
-additionally allows to configure interaction reactions too
+  between 0 and 1
+- In `ratio`, the sum of the values `xa`, `xd` and `xr` needs to remain below
+  `0.75`. `xs` is internally set to `xs === 0.25`.
+- Most numeric values in the `styles` prop must not use a unit (e.g. `px` or
+  `em`) as they set values on SVG components (user units)
+- Note that `styles` is not a regular `style` prop, but a custom prop that
+  additionally allows to configure interaction reactions too
 - To regularly style the component, use the `style` prop
 - Optional props: `ratio`, `dndBox`, `onChange`, `style`
 
