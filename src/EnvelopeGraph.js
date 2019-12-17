@@ -107,11 +107,16 @@ class EnvelopeGraph extends React.Component {
   }
 
   onWindowResize() {
-    const { width } = this.refs.box.getBoundingClientRect();
+    const { width, height } = this.computeStyles();
 
     // NOTE: As the svg preserves it's aspect ratio, we have to calculate only
     // one value that accounts for both width and height ratios.
-    this.setState({ svgRatio: width / viewBox.width });
+    this.setState({
+      svgRatio: {
+        width: width / viewBox.width,
+        height: height / viewBox.height
+      }
+    });
   }
 
   getPhaseLengths() {
@@ -245,13 +250,8 @@ class EnvelopeGraph extends React.Component {
     const vb = `0 0 ${w} ${h}`;
 
     return (
-      <svg
-        style={style}
-        onDragStart={() => false}
-        viewBox={vb}
-      >
+      <svg style={style} onDragStart={() => false} viewBox={vb} ref="box">
         <path
-          ref="box"
           transform={`translate(${marginLeft}, ${marginTop})`}
           d={this.generatePath()}
           style={Object.assign({}, styles.line)}
@@ -348,13 +348,18 @@ class EnvelopeGraph extends React.Component {
     }
   }
 
-  extractPadding() {
+  computeStyles() {
     const computedStyle = window.getComputedStyle(this.refs.box);
-    const padding = {};
-    ["paddingTop", "paddingRight", "paddingBottom", "paddingLeft"].map(
-      key => (padding[key] = parseFloat(computedStyle[key]))
-    );
-    return padding;
+    const styles = {};
+    [
+      "paddingTop",
+      "paddingRight",
+      "paddingBottom",
+      "paddingLeft",
+      "height",
+      "width"
+    ].map(key => (styles[key] = parseFloat(computedStyle[key])));
+    return styles;
   }
 
   moveDnDRect(type) {
@@ -367,49 +372,35 @@ class EnvelopeGraph extends React.Component {
         sustainWidth,
         releaseWidth
       ] = this.getPhaseLengths();
+      const {
+        paddingTop,
+        paddingRight,
+        paddingBottom,
+        paddingLeft
+      } = this.computeStyles();
       const { marginTop, marginRight, marginBottom, marginLeft } = viewBox;
       const { drag, xa, xd, xr, ratio, svgRatio } = this.state;
+      const { styles } = this.props;
 
       if (drag === type) {
         const rect = this.refs.box.getBoundingClientRect();
-        const {
-          paddingTop,
-          paddingRight,
-          paddingBottom,
-          paddingLeft
-        } = this.extractPadding();
         if (type === "attack") {
-          const xaNew =
-            (event.clientX - rect.left - paddingLeft + marginLeft) / svgRatio;
+          const xaNew = ((event.clientX - paddingLeft - rect.left) / svgRatio.width) - marginLeft;
           let newState = {};
           if (xaNew <= ratio.xa * viewBox.width && xaNew >= 0) {
             newState.xa = xaNew;
           }
-
-          const yaNew =
-            1 - (event.clientY - rect.top) / viewBox.height / svgRatio;
-          if (yaNew >= 0 && yaNew <= 1) {
-            // TODO: Readd ya and make sure graph is displayed correctly.
-            //newState.ya = yaNew;
-          }
-
           this.setState(newState);
         } else if (type === "decaysustain") {
-          const ysNew =
-            1 -
-            (event.clientY - rect.top - paddingTop) / viewBox.height / svgRatio;
+          // NOTE: ys is defined as a percentage and not as an absolute value in
+          // user units.
+          const ysNew = 1 - (event.clientY - paddingTop - rect.top) / svgRatio.height / viewBox.height;
 
           let newState = {};
           if (ysNew >= 0 && ysNew <= 1) {
             newState.ys = ysNew;
           }
-          const xdNew =
-            (event.clientX -
-              rect.left -
-              paddingLeft +
-              marginLeft -
-              attackWidth * svgRatio) /
-            svgRatio;
+          const xdNew = ((event.clientX - paddingLeft - rect.left - (attackWidth * svgRatio.width)) / svgRatio.width);
 
           if (xdNew >= 0 && xdNew <= ratio.xd * viewBox.width) {
             newState.xd = xdNew;
@@ -417,13 +408,7 @@ class EnvelopeGraph extends React.Component {
 
           this.setState(newState);
         } else if (type == "release") {
-          const xrNew =
-            (event.clientX -
-              rect.left +
-              paddingLeft +
-              marginLeft -
-              (attackWidth + decayWidth + sustainWidth) * svgRatio) /
-            svgRatio;
+          const xrNew =(event.clientX - paddingLeft - rect.left - ((attackWidth + decayWidth + sustainWidth) * svgRatio.width)) / svgRatio.width;
           if (xrNew >= 0 && xrNew <= ratio.xr * viewBox.width) {
             this.setState({ xr: xrNew });
           }
