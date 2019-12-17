@@ -110,9 +110,14 @@ is a list of the current limitations:
 
 ## Changelog
 
+### 0.1.2
+
+- Bugfix: Properly fix ratio issues with `height` and `width`. They're now
+members of the `style` prop
+
 ### 0.1.1
 
-- Dirtyfix: Set `height`/`width` of graph to `100%` to respect ratio. I'll have
+- Hotfix: Set `height`/`width` of graph to `100%` to respect ratio. I'll have
 to go back on that fix later...
 
 ### 0.1.0
