@@ -110,6 +110,12 @@ is a list of the current limitations:
 
 ## Changelog
 
+### 0.1.3
+
+- Bugfix: Dropped `getBoundingClientRect` in favor of `getComputedStyles` for
+  measuring the svg's dimensions. Setting `margin` and `padding` via `style`
+  should now be possible without problems.
+
 ### 0.1.2
 
 - Bugfix: Properly fix ratio issues with `height` and `width`. They're now
