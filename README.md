@@ -112,6 +112,11 @@ is a list of the current limitations:
 
 ## Changelog
 
+### 0.1.4
+
+- `defaultXa`, `defaultXd`, `defaultYs` and `defaultXr` can now be used to
+  continuously set the graphs values without an `onChange` event firing
+
 ### 0.1.3
 
 - Bugfix: Dropped `getBoundingClientRect` in favor of `getComputedStyles` for
@@ -121,23 +126,23 @@ is a list of the current limitations:
 ### 0.1.2
 
 - Bugfix: Properly fix ratio issues with `height` and `width`. They're now
-members of the `style` prop
+  members of the `style` prop
 
 ### 0.1.1
 
 - Hotfix: Set `height`/`width` of graph to `100%` to respect ratio. I'll have
-to go back on that fix later...
+  to go back on that fix later...
 
 ### 0.1.0
 
-Breaking change: Removed functions `onAttackChange`, `onDecayChange`,
-`onSustainChange` and `onReleaseChange` in favor of `onChange`, which returns
-all values as an object
+- Breaking change: Removed functions `onAttackChange`, `onDecayChange`,
+  `onSustainChange` and `onReleaseChange` in favor of `onChange`, which returns
+  all values as an object
 
 ### 0.0.11
 
 - When setting the props `height` and `width`, the graph's ratio is adjusts
-accordingly
+  accordingly
 
 ### 0.0.10
 
@@ -160,7 +165,7 @@ accordingly
 
 - Add cut corners to graph
 - Allow definition of `padding` through native `style` prop and remove
-`marginTop`, `marginRight`, `marginBottom`, and `marginRight` props
+  `marginTop`, `marginRight`, `marginBottom`, and `marginRight` props
 
 ### 0.0.5
 
