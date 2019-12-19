@@ -83,7 +83,6 @@ class EnvelopeGraph extends React.Component {
       xa: props.defaultXa * viewBox.width * this.state.ratio.xa,
       xd: props.defaultXd * viewBox.width * this.state.ratio.xd,
       xr: props.defaultXr * viewBox.width * this.state.ratio.xr,
-
       // NOTE: Dragging attack in y direction is currently not implemented.
       ya: props.defaultYa,
       ys: props.defaultYs,
@@ -316,13 +315,29 @@ class EnvelopeGraph extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { drag } = this.state;
+    const { drag, ratio } = this.state;
+    const { defaultXa, defaultXd, defaultYs, defaultXr } = this.props;
 
     if (prevState.drag !== drag) {
       window.addEventListener("mousemove", this.moveDnDRect(drag));
     }
 
-    this.notifyChanges(prevState);
+    if (
+      prevProps.defaultXa !== defaultXa ||
+      prevProps.defaultXd !== defaultXd ||
+      prevProps.defaultYs !== defaultYs ||
+      prevProps.defaultXr !== defaultXr
+    ) {
+      Object.assign(this.state, {
+        xa: defaultXa * viewBox.width * ratio.xa,
+        xd: defaultXd * viewBox.width * ratio.xd,
+        ys: defaultYs,
+        xr: defaultXr * viewBox.width * ratio.xr
+      });
+      this.setState(this.state);
+    } else {
+      this.notifyChanges(prevState);
+    }
   }
 
   notifyChanges(prevState) {
@@ -385,7 +400,9 @@ class EnvelopeGraph extends React.Component {
       if (drag === type) {
         const rect = this.refs.box.getBoundingClientRect();
         if (type === "attack") {
-          const xaNew = ((event.clientX - paddingLeft - rect.left) / svgRatio.width) - marginLeft;
+          const xaNew =
+            (event.clientX - paddingLeft - rect.left) / svgRatio.width -
+            marginLeft;
           let newState = {};
           if (xaNew <= ratio.xa * viewBox.width && xaNew >= 0) {
             newState.xa = xaNew;
@@ -394,13 +411,22 @@ class EnvelopeGraph extends React.Component {
         } else if (type === "decaysustain") {
           // NOTE: ys is defined as a percentage and not as an absolute value in
           // user units.
-          const ysNew = 1 - (event.clientY - paddingTop - rect.top) / svgRatio.height / viewBox.height;
+          const ysNew =
+            1 -
+            (event.clientY - paddingTop - rect.top) /
+              svgRatio.height /
+              viewBox.height;
 
           let newState = {};
           if (ysNew >= 0 && ysNew <= 1) {
             newState.ys = ysNew;
           }
-          const xdNew = ((event.clientX - paddingLeft - rect.left - (attackWidth * svgRatio.width)) / svgRatio.width);
+          const xdNew =
+            (event.clientX -
+              paddingLeft -
+              rect.left -
+              attackWidth * svgRatio.width) /
+            svgRatio.width;
 
           if (xdNew >= 0 && xdNew <= ratio.xd * viewBox.width) {
             newState.xd = xdNew;
@@ -408,7 +434,12 @@ class EnvelopeGraph extends React.Component {
 
           this.setState(newState);
         } else if (type == "release") {
-          const xrNew =(event.clientX - paddingLeft - rect.left - ((attackWidth + decayWidth + sustainWidth) * svgRatio.width)) / svgRatio.width;
+          const xrNew =
+            (event.clientX -
+              paddingLeft -
+              rect.left -
+              (attackWidth + decayWidth + sustainWidth) * svgRatio.width) /
+            svgRatio.width;
           if (xrNew >= 0 && xrNew <= ratio.xr * viewBox.width) {
             this.setState({ xr: xrNew });
           }

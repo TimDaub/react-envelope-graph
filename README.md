@@ -87,6 +87,8 @@ function App() {
 - Note that `styles` is not a regular `style` prop, but a custom prop that
   additionally allows to configure interaction reactions too
 - To regularly style the component, use the `style` prop
+- When `defaultXa`, `defaultXd`, `defaultYs` and `defaultXr` props are changed,
+  no `onChange` event is fired and the graph is set to these values.
 - Optional props: `ratio`, `dndBox`, `onChange`, `style`
 
 
